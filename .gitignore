@@ -1,0 +1,16 @@
+# Ignorar node_modules
+node_modules/
+
+# Ignorar archivos de entorno
+.env
+
+# Ignorar archivos de log
+*.log
+
+# Ignorar la carpeta de build (ej. en React o Next.js)
+dist/
+build/
+
+# Ignorar archivos del sistema
+.DS_Store
+Thumbs.db
