@@ -1,4 +1,4 @@
-const conection = require("../config/database");
+const conection =require("../config/database.js")
 
 const getAllCanchas = (req, res) => {
   const consulta = "select * from canchas";

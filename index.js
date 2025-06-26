@@ -1,12 +1,13 @@
 const express = require("express");
 const cors = require("cors");
-const { conection } = require("./config/database");
+const conection  = require("./config/database");
 require("dotenv").config();
 const routerCanchas = require("./routes/canchas")
 
 const app = express();
 
 app.use(cors());
+app.use(express.json());
 
 const PORT = process.env.PORT || 8000;
 

@@ -1,4 +1,4 @@
-const mysql = require("mysql2");
+const mysql = require("mysql");
 require("dotenv").config()
 
 const conection = mysql.createConnection({
@@ -8,4 +8,4 @@ const conection = mysql.createConnection({
   database: process.env.DB_NAME,
 });
 
-module.exports = { conection };
+module.exports =  conection ;
