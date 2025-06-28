@@ -17,7 +17,10 @@ const login = async (req, res) => {
         if (match) {
           res.json({
             message: "Usuario logueado con exito",
-            results: results,
+            results: {
+              id_cliente: results[0].id_clientes,
+              usuario: results[0].usuario
+            },
           });
         } else {
           res.send({ message: "Email o contraseña invalido" });
@@ -29,7 +32,10 @@ const login = async (req, res) => {
     if (match) {
       res.json({
         message: "Usuario logueado con exito",
-        results: results,
+        results: {
+          id_cliente: results[0].id_clientes,
+          usuario: results[0].usuario
+        },
       });
     } else {
       res.send({ message: "Email o contraseña invalido" });
