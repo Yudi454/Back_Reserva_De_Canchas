@@ -10,8 +10,8 @@ router.get("/horarios-disponibles",horariosControllers.getHorariosDisponibles)
 
 router.post("/create",horariosControllers.createHorario)
 
-router.put("/update",horariosControllers.updateHorario)
+router.patch("/update/:id",horariosControllers.updateHorario)
 
-router.delete("/delete",horariosControllers.deleteHorario)
+router.delete("/delete/:id",horariosControllers.deleteHorario)
 
 module.exports = router
