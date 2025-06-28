@@ -8,8 +8,8 @@ router.get("/:id",usuariosControllers.getUsuario)
 
 router.post("/create",usuariosControllers.createUsuario)
 
-router.put("/update",usuariosControllers.updateUsuario)
+router.patch("/update/:id",usuariosControllers.updateUsuario)
 
-router.put("/delete",usuariosControllers.deleteUsuario)
+router.delete("/delete/:id",usuariosControllers.deleteUsuario)
 
 module.exports = router
