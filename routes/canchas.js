@@ -3,12 +3,17 @@ const router = express.Router()
 const {getAllCanchas, getOneCancha, getHorariosCancha,postReserva,getReservas,deleteReservas} = require("../controllers/canchas")
 
 
-router.get("/canchas",getAllCanchas);
-router.get("/canchas/InfoCancha/:id", getOneCancha)
-router.get("/canchas/InfoCancha/:id/turnos", getHorariosCancha)
-router.post("/canchas/reservas",postReserva)
-router.get("/canchas/misReservas",getReservas)
-router.delete("/canchas/reservas/:id_reserva",deleteReservas)
+router.get("/",getAllCanchas);
+
+router.get("/:id", getOneCancha)
+
+router.get("/:id/turnos", getHorariosCancha)
+
+router.post("/reservas",postReserva)
+
+router.get("/misReservas",getReservas)
+
+router.delete("/reservas/:id_reserva",deleteReservas)
 
 
 module.exports= router

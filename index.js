@@ -1,8 +1,9 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const conection  = require("./config/database");
-require("dotenv").config();
 const routerCanchas = require("./routes/canchas")
+
 
 const app = express();
 
@@ -17,7 +18,7 @@ conection.connect((err) => {
 });
 
 //rutas de canchas y misReservas
-app.use("/",routerCanchas)
+app.use("/canchas",routerCanchas)
 
 app.listen(PORT, (err) => {
   if (err) throw err;
