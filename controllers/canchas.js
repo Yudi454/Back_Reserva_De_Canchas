@@ -133,6 +133,7 @@ const getReservas=(req,res)=>{
 
 
   const consulta = `SELECT 
+  r.id_reserva,
   r.dia_reserva,
   c.tipo_cancha,
   c.precio_cancha,
@@ -155,4 +156,26 @@ const getReservas=(req,res)=>{
   });
 }
 
-module.exports = { getAllCanchas, getOneCancha, getHorariosCancha,postReserva,getReservas };
+const deleteReservas=(req,res)=>{
+  const {id_reserva} = req.params
+
+  const consultaDetalle= "DELETE FROM Detalle_Reservas WHERE id_reserva = ?;"
+
+  conection.query(consultaDetalle,[id_reserva],(err)=>{
+    if(err) return res.status(500).json({error:"error al eliminar el detalle:"});
+
+
+    const consultaReserva="DELETE FROM Reservas WHERE id_reserva = ?;"
+
+    conection.query(consultaReserva,[id_reserva],(err2)=>{
+      if(err2) return res.status(500).json({error:"error al eliminar la reserva back"})
+
+      res.json({mensaje:"Reserva eliminada correctamente"})
+    })
+  
+  })
+
+
+}
+
+module.exports = { getAllCanchas, getOneCancha, getHorariosCancha,postReserva,getReservas,deleteReservas };
