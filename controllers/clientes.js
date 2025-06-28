@@ -1,10 +1,22 @@
-require("dotenv").config();
 const { conection } = require("../config/database");
 
 const getAllClientes = (req, res) => {
-  const consulta = "select * from Clientes";
+  const consulta =
+    "SELECT id_clientes, usuario, email_cliente, telefono_cliente FROM clientes";
 
   conection.query(consulta, (err, results) => {
+    if (err) throw err;
+    res.json(results);
+  });
+};
+
+const getCliente = (req, res) => {
+  const { id } = req.params;
+
+  const consulta =
+    "SELECT id_clientes, usuario, email_cliente, telefono_cliente FROM clientes WHERE id_clientes = ?";
+
+  conection.query(consulta, [id], (err, results) => {
     if (err) throw err;
     res.json(results);
   });
@@ -23,20 +35,19 @@ const deleteClientes = (req, res) => {
 };
 
 const updateClientes = (req, res) => {
+  const { id } = req.params;
 
-  const {id} = req.params;
-  const usuario = req.body.usuario;
-  const contraseña_cliente = req.body.contraseña_cliente;
-  const email_cliente = req.body.email_cliente;
-  const telefono_cliente = req.body.telefono_cliente;
-  
+  const { usuario, email_cliente, telefono_cliente } =
+    req.body;
 
   const consulta =
-    "UPDATE Clientes SET usuario=?, contraseña_cliente=?, email_cliente=?, telefono_cliente=? WHERE id_clientes=?";
+    "UPDATE clientes SET usuario=?, email_cliente=?, telefono_cliente=? WHERE id_clientes=?";
 
-  conection.query(consulta,[usuario,contraseña_cliente,email_cliente,telefono_cliente,id],
+  conection.query(
+    consulta,
+    [usuario, email_cliente, telefono_cliente, id],
     (err, results) => {
-      if (err) throw err
+      if (err) throw err;
 
       res.status(200).send({ message: "cliente actualizado correctamente" });
     }
@@ -44,39 +55,31 @@ const updateClientes = (req, res) => {
 };
 
 const createCliente = (req, res) => {
-  const {
-    usuario,
-    contraseña_cliente,
-    email_cliente,
-    telefono_cliente,
-  } = req.body;
+  const { usuario, contraseña_cliente, email_cliente, telefono_cliente } =
+    req.body;
 
   const consulta =
-    "insert into Clientes (usuario,contraseña_cliente,email_cliente,telefono_cliente) values (?,?,?,?)";
+    "INSERT INTO Clientes (usuario,contraseña_cliente,email_cliente,telefono_cliente) VALUES (?,?,?,?)";
 
   conection.query(
     consulta,
-    [
-      usuario,
-      contraseña_cliente,
-      email_cliente,
-      telefono_cliente,
-    ],
+    [usuario, contraseña_cliente, email_cliente, telefono_cliente],
     (err, results) => {
       if (err) {
-      console.error(err); // ayuda para debug
-      return res.status(500).send({
-        message: "algo salió mal, no se pudo crear el cliente",
-      });
-    }
+        console.error(err); // ayuda para debug
+        return res.status(500).send({
+          message: "algo salió mal, no se pudo crear el cliente",
+        });
+      }
 
-    return res.send({ message: "Cliente creado correctamente" });
-  }
+      return res.send({ message: "Cliente creado correctamente" });
+    }
   );
 };
 
 module.exports = {
   getAllClientes,
+  getCliente,
   deleteClientes,
   updateClientes,
   createCliente,
