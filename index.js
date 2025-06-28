@@ -9,7 +9,7 @@ const app = express();
 app.use(express.json())
 app.use(cors());
 
-app.use("/api/productos",productosRoutes)
+app.use("/productos",productosRoutes)
 
 const PORT = process.env.PORT || 8000;
 

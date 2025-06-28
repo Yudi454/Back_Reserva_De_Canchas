@@ -8,8 +8,8 @@ router.get("/:id",productosController.getProducto)
 
 router.post("/create",productosController.createProducto)
 
-router.put("/update/:id",productosController.updateProducto)
+router.patch("/update/:id",productosController.updateProducto)
 
-router.patch("/delete/:id",productosController.deleteProducto)
+router.delete("/delete/:id",productosController.deleteProducto)
 
 module.exports = router
