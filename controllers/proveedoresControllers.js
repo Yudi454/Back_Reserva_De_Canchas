@@ -1,7 +1,7 @@
 const { conection } = require("../config/database");
 
 const getProveedores = (req, res) => {
-  const consulta = "SELECT * FROM PROVEEDORES WHERE ESTADO_PROVEEDOR = TRUE";
+  const consulta = "SELECT id_proveedor, nombre_proveedor, telefono_proveedor, email_proveedor FROM PROVEEDORES WHERE ESTADO_PROVEEDOR = TRUE";
 
   conection.query(consulta, (err, results) => {
     if (err) throw err;
@@ -13,7 +13,7 @@ const getProveedor = (req, res) => {
   const { id } = req.params;
 
   const consulta =
-    "SELECT * FROM PROVEEDORES WHERE ID_PROVEEDOR = ? AND ESTADO_PROVEEDOR = TRUE";
+    "SELECT id_proveedor, nombre_proveedor, telefono_proveedor, email_proveedor FROM PROVEEDORES WHERE ID_PROVEEDOR = ? AND ESTADO_PROVEEDOR = TRUE";
 
   conection.query(consulta, [id], (err, results) => {
     if (err) throw err;
@@ -36,12 +36,12 @@ const createProveedor = (req, res) => {
 const updateProveedor = (req, res) => {
   const { id } = req.params;
 
-  const { nombre, email, telefono } = req.body;
+  const { nombre_proveedor, email_proveedor, telefono_proveedor } = req.body;
 
   const consulta =
-    "UPDATE PROVEEDORES SET NOMBRE_PROVEEDOR = ?, EMAIL_PROVEEDOR = ?, TELEFONO_PROVEEDOR = ?, WHERE ID_PROVEEDOR = ?";
+    "UPDATE PROVEEDORES SET NOMBRE_PROVEEDOR = ?, EMAIL_PROVEEDOR = ?, TELEFONO_PROVEEDOR = ? WHERE ID_PROVEEDOR = ?";
 
-  conection.query(consulta, [nombre, email, telefono, id], (err, results) => {
+  conection.query(consulta, [nombre_proveedor, email_proveedor, telefono_proveedor, id], (err, results) => {
     if (err) throw err;
     res.send({ message: "Proveedor editado con exito" });
   });
@@ -51,7 +51,7 @@ const deleteProveedor = (req, res) => {
   const { id } = req.params;
 
   const consulta =
-    "UPDATE PROVEEDORES SET ESTADO_PROVEEDOR = FALSE WHERE ID = ?";
+    "UPDATE PROVEEDORES SET ESTADO_PROVEEDOR = FALSE WHERE ID_PROVEEDOR = ?";
 
   conection.query(consulta, [id], (err, results) => {
     if (err) throw err;

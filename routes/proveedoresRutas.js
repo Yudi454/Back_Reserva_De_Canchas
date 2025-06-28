@@ -8,8 +8,8 @@ router.get("/:id",proveedoresControllers.getProveedor)
 
 router.post("/create",proveedoresControllers.createProveedor)
 
-router.put("update",proveedoresControllers.updateProveedor)
+router.patch("/update/:id",proveedoresControllers.updateProveedor)
 
-router.put("/delete",proveedoresControllers.deleteProveedor)
+router.delete("/delete/:id",proveedoresControllers.deleteProveedor)
 
 module.exports = router
