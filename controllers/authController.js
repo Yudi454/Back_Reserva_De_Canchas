@@ -1,44 +1,53 @@
 const bcrypt = require("bcrypt");
 const { conection } = require("../config/database");
 
-const login = async (req, res) => {
+const login = (req, res) => {
   const { email, contraseña } = req.body;
 
   const consulta = "SELECT * FROM CLIENTES WHERE EMAIL_CLIENTE = ? ";
 
-  conection.query(consulta, [email], (err, results) => {
-    if (err) {
-      const consulta = "SELECT * FROM USUARIOS WHERE EMAIL_USUARIO = ?";
+  conection.query(consulta, [email], async (err, results) => {
+    if (err) throw err;
+    if (results.length > 0) {
+      const match = await bcrypt.compare(
+        contraseña,
+        results[0].contraseña_cliente
+      );
 
-      conection.query(consulta, [email], (err, results) => {
+      if (match) {
+        return res.json({
+          message: "Usuario logueado con exito",
+          results: {
+            id_cliente: results[0].id_clientes,
+            usuario: results[0].usuario,
+          },
+        });
+      } else {
+        console.log("entro por el error de cliente");
+
+        res.send({ message: "email y contraseñas incorrectos" });
+      }
+    } else {
+      const consulta = "SELECT * FROM usuarios WHERE email_usuario = ?";
+
+      conection.query(consulta, [email], async (err, results) => {
         if (err) throw err;
-        const match = bcrypt.compare(contraseña, results[0].contraseña_cliente);
-
+        console.log("contraseña (input):", `"${contraseña}"`);
+        console.log("hash almacenado:", `"${results[0].contraseña_usuario}"`);
+        const match = await bcrypt.compare(
+          contraseña.trim(),
+          results[0].contraseña_usuario.trim()
+        );
+        console.log(match);
         if (match) {
-          res.json({
+          return res.json({
             message: "Usuario logueado con exito",
-            results: {
-              id_cliente: results[0].id_clientes,
-              usuario: results[0].usuario
-            },
+            results: results,
           });
         } else {
-          res.send({ message: "Email o contraseña invalido" });
+          res.send({ message: "Email o contraseña incorrectos" });
         }
       });
-    }
-    const match = bcrypt.compare(contraseña, results[0].contraseña_cliente);
-
-    if (match) {
-      res.json({
-        message: "Usuario logueado con exito",
-        results: {
-          id_cliente: results[0].id_clientes,
-          usuario: results[0].usuario
-        },
-      });
-    } else {
-      res.send({ message: "Email o contraseña invalido" });
     }
   });
 };
