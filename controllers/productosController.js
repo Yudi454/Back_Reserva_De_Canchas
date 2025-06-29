@@ -1,4 +1,4 @@
-const { conection } = require("../config/database");
+const conection = require("../config/database");
 
 const getProductos = (req, res) => {
   const consulta =
@@ -44,10 +44,14 @@ const updateProducto = (req, res) => {
   const consulta =
     "UPDATE PRODUCTOS SET NOMBRE_PRODUCTO = ?, PRECIO_PRODUCTO = ?, STOCK = ? WHERE ID_PRODUCTO =?";
 
-  conection.query(consulta, [nombre_producto, precio_producto, stock, id], (err, results) => {
-    if (err) throw err;
-    res.send({ message: "Producto actualizado con exito" });
-  });
+  conection.query(
+    consulta,
+    [nombre_producto, precio_producto, stock, id],
+    (err, results) => {
+      if (err) throw err;
+      res.send({ message: "Producto actualizado con exito" });
+    }
+  );
 };
 
 const deleteProducto = (req, res) => {

@@ -1,4 +1,4 @@
-const { conection } = require("../config/database");
+const  conection  = require("../config/database");
 
 const getProveedores = (req, res) => {
   const consulta = "SELECT id_proveedor, nombre_proveedor, telefono_proveedor, email_proveedor FROM PROVEEDORES WHERE ESTADO_PROVEEDOR = TRUE";

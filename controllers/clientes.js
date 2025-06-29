@@ -1,4 +1,4 @@
-const { conection } = require("../config/database");
+const conection = require("../config/database");
 
 const getAllClientes = (req, res) => {
   const consulta =
@@ -37,8 +37,7 @@ const deleteClientes = (req, res) => {
 const updateClientes = (req, res) => {
   const { id } = req.params;
 
-  const { usuario, email_cliente, telefono_cliente } =
-    req.body;
+  const { usuario, email_cliente, telefono_cliente } = req.body;
 
   const consulta =
     "UPDATE clientes SET usuario=?, email_cliente=?, telefono_cliente=? WHERE id_clientes=?";

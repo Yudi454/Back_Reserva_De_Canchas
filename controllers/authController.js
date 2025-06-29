@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt");
-const { conection } = require("../config/database");
+const conection = require("../config/database");
 
 const login = (req, res) => {
   const { email, contraseña } = req.body;
@@ -23,8 +23,6 @@ const login = (req, res) => {
           },
         });
       } else {
-        console.log("entro por el error de cliente");
-
         res.send({ message: "email y contraseñas incorrectos" });
       }
     } else {
@@ -32,8 +30,6 @@ const login = (req, res) => {
 
       conection.query(consulta, [email], async (err, results) => {
         if (err) throw err;
-        console.log("contraseña (input):", `"${contraseña}"`);
-        console.log("hash almacenado:", `"${results[0].contraseña_usuario}"`);
         const match = await bcrypt.compare(
           contraseña.trim(),
           results[0].contraseña_usuario.trim()

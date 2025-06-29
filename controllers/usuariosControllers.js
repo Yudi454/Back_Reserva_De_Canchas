@@ -1,8 +1,9 @@
-const { conection } = require("../config/database");
+const  conection = require("../config/database");
 const bcrypt = require("bcrypt");
 
 const getUsuarios = (req, res) => {
-  const consulta = "SELECT id_usuario, nombre_usuario, apellido_usuario, dni, email_usuario, rol, telefono_usuario FROM USUARIOS WHERE ESTADO_USUARIO = TRUE";
+  const consulta =
+    "SELECT id_usuario, nombre_usuario, apellido_usuario, dni, email_usuario, rol, telefono_usuario FROM USUARIOS WHERE ESTADO_USUARIO = TRUE";
 
   conection.query(consulta, (err, results) => {
     if (err) throw err;
@@ -43,7 +44,14 @@ const createUsuario = async (req, res) => {
 const updateUsuario = async (req, res) => {
   const { id } = req.params;
 
-  const { nombre_usuario, apellido_usuario, rol, dni, email_usuario, telefono_usuario } = req.body;
+  const {
+    nombre_usuario,
+    apellido_usuario,
+    rol,
+    dni,
+    email_usuario,
+    telefono_usuario,
+  } = req.body;
 
   //const contraseñaHash = bcrypt.hash(contraseña, 10);
 
@@ -52,7 +60,15 @@ const updateUsuario = async (req, res) => {
 
   conection.query(
     consulta,
-    [nombre_usuario, apellido_usuario, rol, dni, email_usuario, telefono_usuario, id],
+    [
+      nombre_usuario,
+      apellido_usuario,
+      rol,
+      dni,
+      email_usuario,
+      telefono_usuario,
+      id,
+    ],
     (err, results) => {
       if (err) throw err;
       res.send({ message: "Usuario actualizado con exito" });
