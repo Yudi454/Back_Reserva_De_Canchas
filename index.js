@@ -2,12 +2,18 @@ const express = require("express");
 const cors = require("cors");
 const { conection } = require("./config/database");
 const productosRoutes = require("./routes/productosRoutes")
+const ventasRoutes = require("./routes/ventasRoutes")
 require("dotenv").config();
+const proveedoresRutas = require("./routes/proveedoresRutas")
 
 const app = express();
 
 app.use(express.json())
 app.use(cors());
+
+app.use("/ventas",ventasRoutes)
+
+app.use("/proveedores",proveedoresRutas)
 
 app.use("/productos",productosRoutes)
 
