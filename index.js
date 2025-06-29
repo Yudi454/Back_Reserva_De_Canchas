@@ -11,6 +11,8 @@ const proveedoresRutas = require("./routes/proveedoresRutas")
 const routesClientes = require("./routes/clientes");
 
 require("dotenv").config();
+const horariosRutas = require("./routes/horariosRutas")
+
 
 const app = express();
 
@@ -23,6 +25,10 @@ app.use("/usuarios",usuariosRutas)
 app.use("/ventas",ventasRoutes)
 app.use("/proveedores",proveedoresRutas)
 app.use("/productos",productosRoutes)
+
+app.use(express.json());
+
+app.use("/horarios",horariosRutas)
 
 const PORT = process.env.PORT || 8000;
 
