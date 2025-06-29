@@ -6,12 +6,14 @@ const ventasRoutes = require("./routes/ventasRoutes")
 const usuariosRutas = require("./routes/usuariosRutas")
 const proveedoresRutas = require("./routes/proveedoresRutas")
 require("dotenv").config();
+const routesClientes = require("./routes/clientes");
 
 const app = express();
 
 app.use(express.json())
 app.use(cors());
 
+app.use("/clientes",routesClientes)
 app.use("/usuarios",usuariosRutas)
 app.use("/ventas",ventasRoutes)
 app.use("/proveedores",proveedoresRutas)
@@ -22,9 +24,11 @@ const PORT = process.env.PORT || 8000;
 conection.connect((err) => {
   if (err) throw err;
   console.log("Conectado a la base de datos");
+  
 });
 
 app.listen(PORT, (err) => {
   if (err) throw err;
   console.log(`Conectado al puerto ${PORT}`);
 });
+
