@@ -14,4 +14,46 @@ const getAllCanchas = (req, res) => {
   });
 };
 
-module.exports =  {getAllCanchas};
+const createCanchas=(req,res)=>{
+  const {imagen_cancha,precio_cancha}=req.body
+
+  const estado_cancha=1;
+
+  const consulta =`insert into canchas (imagen_cancha,precio_cancha,estado_cancha)
+  values(?,?,?)`
+
+  conection.query(consulta,[imagen_cancha,precio_cancha,estado_cancha],(err,results)=>{
+
+    if(err) throw err;
+
+    res.status(200).send({message:"cancha creada con exito"})
+
+  })
+}
+
+const patchCancha=(req,res)=>{ //eliminado logico de canchas
+  const id_cancha= req.params
+
+  const consulta=`update canchas set estado_cancha=0 where id_cancha=?`
+
+  conection.query(consulta,[id_cancha],(err,results)=>{
+    if(err) throw err;
+    res.status(200).send({message:"cancha eliminada"})
+  })
+
+}
+
+
+const updateCanchas=(req,res)=>{
+  const {id_cancha,imagen_cancha,precio_cancha,estado_cancha}=req.body
+
+  const consulta =`update canchas set imagen_cancha=?, precio_cancha=?, estado_cancha=?
+  where id_cancha=?`
+
+  conection.query(consulta,[imagen_cancha,precio_cancha,estado_cancha,id_cancha],(err,results)=>{
+    if(err) throw err;
+    res.status(200).send({message:"actualizacion exitosa"})
+  })
+}
+
+module.exports =  {getAllCanchas,createCanchas,patchCancha, updateCanchas};

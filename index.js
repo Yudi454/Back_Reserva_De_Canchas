@@ -19,7 +19,7 @@ app.use(express.json());
 app.use(cors());
 
 app.use("/canchas", routerCanchas);
-app.use("/canchas/reservas",routerReservas)
+app.use("/reservas",routerReservas)
 app.use("/clientes", routesClientes);
 app.use("/usuarios", usuariosRutas);
 app.use("/ventas", ventasRoutes);
