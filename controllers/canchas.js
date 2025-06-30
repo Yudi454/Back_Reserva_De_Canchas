@@ -63,10 +63,10 @@ const postReserva = (req, res) => {
 
   console.log("Datos recibidos en la reserva:", req.body);
 
-  const { id_usuario, id_cancha,precio, dia_reserva, horario_inicio, horario_fin } =
+  const { id_cliente, id_cancha,precio, dia_reserva, horario_inicio, horario_fin } =
     req.body;
 
-  if (!id_usuario || !id_cancha || !precio || !dia_reserva || !horario_inicio || !horario_fin) {
+  if (!id_cliente || !id_cancha || !precio || !dia_reserva || !horario_inicio || !horario_fin) {
     return res
       .status(400)
       .json({ error: "Faltan datos para crear la reserva" });
@@ -91,11 +91,11 @@ const postReserva = (req, res) => {
     const id_horario = results[0].id_horario;
 
     const insertReserva = `
-      INSERT INTO Reservas (dia_reserva,total, id_usuario)
+      INSERT INTO Reservas (dia_reserva,total, id_cliente)
       VALUES (?, ?,?)
     `;
 
-    conection.query(insertReserva,[dia_reserva,precio, id_usuario],(err2, result2) => {
+    conection.query(insertReserva,[dia_reserva,precio, id_cliente],(err2, result2) => {
       if (err2) {
         console.error("Error insertando en Reservas:", err2);
         return res.status(500).json({ error: "Error al crear reserva" });
@@ -143,7 +143,7 @@ const getReservas=(req,res)=>{
   JOIN Detalle_Reservas dr ON r.id_reserva = dr.id_reserva
   JOIN Canchas c ON dr.id_cancha = c.id_cancha
   JOIN Horarios h ON dr.id_horario = h.id_horario
-  WHERE r.id_usuario = ?;`;
+  WHERE r.id_cliente = ?;`;
 
   conection.query(consulta,[usuario], (err, results) => {
     if (err) throw err;
