@@ -4,6 +4,7 @@ const cors = require("cors");
 const conection = require("./config/database");
 
 const routerCanchas = require("./routes/canchas");
+const routerReservas= require("./routes/reservas")
 const productosRoutes = require("./routes/productosRoutes");
 const ventasRoutes = require("./routes/ventasRoutes");
 const usuariosRutas = require("./routes/usuariosRutas");
@@ -17,6 +18,8 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+app.use("/canchas", routerCanchas);
+app.use("/canchas/reservas",routerReservas)
 app.use("/clientes", routesClientes);
 app.use("/usuarios", usuariosRutas);
 app.use("/ventas", ventasRoutes);
@@ -32,8 +35,6 @@ conection.connect((err) => {
   console.log("Conectado a la base de datos");
 });
 
-//rutas de canchas y misReservas
-app.use("/canchas", routerCanchas);
 
 app.listen(PORT, (err) => {
   if (err) throw err;
