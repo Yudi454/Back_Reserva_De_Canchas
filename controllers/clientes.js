@@ -18,7 +18,17 @@ const getCliente = (req, res) => {
 
   conection.query(consulta, [id], (err, results) => {
     if (err) throw err;
-    res.json(results);
+
+    const data = results[0];
+
+    res.json({
+      results: {
+        id_clientes: data.id_clientes,
+        usuario: data.usuario,
+        email_cliente: data.email_cliente,
+        telefono_cliente: data.telefono_cliente,
+      },
+    });
   });
 };
 
@@ -56,7 +66,7 @@ const updateClientes = (req, res) => {
 const createCliente = (req, res) => {
   const { usuario, contraseña_cliente, email_cliente, telefono_cliente } =
     req.body;
-
+    
   const consulta =
     "INSERT INTO Clientes (usuario,contraseña_cliente,email_cliente,telefono_cliente) VALUES (?,?,?,?)";
 
@@ -64,13 +74,7 @@ const createCliente = (req, res) => {
     consulta,
     [usuario, contraseña_cliente, email_cliente, telefono_cliente],
     (err, results) => {
-      if (err) {
-        console.error(err); // ayuda para debug
-        return res.status(500).send({
-          message: "algo salió mal, no se pudo crear el cliente",
-        });
-      }
-
+      if (err) err;
       return res.send({ message: "Cliente creado correctamente" });
     }
   );
