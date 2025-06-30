@@ -5,15 +5,15 @@ const {getAllCanchas, getOneCancha, getHorariosCancha,postReserva,getReservas,de
 
 router.get("/",getAllCanchas);
 
-router.get("/:id", getOneCancha)
-
-router.get("/:id/turnos", getHorariosCancha)
+router.get("/misReservas",getReservas)
 
 router.post("/reservas",postReserva)
 
-router.get("/misReservas",getReservas)
-
 router.delete("/reservas/:id_reserva",deleteReservas)
+
+router.get("/:id/turnos", getHorariosCancha)
+
+router.get("/:id", getOneCancha)
 
 
 module.exports= router

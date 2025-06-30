@@ -149,7 +149,7 @@ const getReservas=(req,res)=>{
     if (err) throw err;
 
     if (results.length === 0) {
-      res.send("no hay reservas");
+      res.send([]);
     } else {
       res.json(results);
     }
