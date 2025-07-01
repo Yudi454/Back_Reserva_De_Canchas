@@ -30,6 +30,18 @@ const getProducto = (req, res) => {
   });
 };
 
+const buscarPorNombre = (req, res) => {
+  const { nombre_producto } = req.body;
+
+  const consulta =
+    "SELECT id_producto, nombre_producto, precio_producto, stock, nombre_proveedor, telefono_proveedor FROM PRODUCTOS pro JOIN PROVEEDORES pve ON pro.id_proveedor = pve.id_proveedor WHERE estado_producto = true AND pro.nombre_producto LIKE ? ORDER BY pro.id_producto ";
+
+  conection.query(consulta, [`%${nombre_producto}%`], (err, results) => {
+    if (err) throw err;
+    res.json(results);
+  });
+};
+
 const createProducto = (req, res) => {
   const { nombre_producto, precio_producto, stock, nombre_proveedor } =
     req.body;
@@ -102,6 +114,7 @@ const deleteProducto = (req, res) => {
 module.exports = {
   getProductos,
   getProducto,
+  buscarPorNombre,
   createProducto,
   updateProducto,
   deleteProducto,
