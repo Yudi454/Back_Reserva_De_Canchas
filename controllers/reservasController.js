@@ -165,5 +165,50 @@ const deleteReservas=(req,res)=>{
 
 }
 
+const updateReserva=(req,res)=>{
 
-module.exports={getOneCancha, getHorariosCancha,postReserva,getReservas,deleteReservas }
+  const {id_reserva}=req.params
+
+  const {dia_reserva,id_cancha,horario_inicio,horario_fin,total,}=req.body
+
+  const buscarIDHorario=`select id_horario from horarios where horario_inicio=? and horario_fin=?`
+
+  conection.query(buscarIDHorario,[horario_inicio,horario_fin],(err,results)=>{
+    if (err) {
+      console.error("Error buscando horario:", err);
+      return res.status(500).json({ error: "Error al buscar horario" });
+    }
+    if (results.length === 0) {
+      return res.status(404).json({ error: "Horario no encontrado" });
+    }
+
+    const IDHorario=results[0].id_horario
+
+    const updateReservaQuery=`update reservas set dia_reserva=? ,total=?
+    where id_reserva=?`
+
+    conection.query(updateReservaQuery,[dia_reserva,total,id_reserva],(err2,results2)=>{
+      if (err2) {
+        console.error("Error al actualizar la reserva:", err2);
+        return res.status(500).json({ error: "Error al actualizar la reserva" });
+      }
+
+      const updateDetalleReserva=`update detalle_reservas set id_cancha=?,id_horario=? 
+      where id_reserva=?`
+
+      conection.query(updateDetalleReserva,[id_cancha,IDHorario,id_reserva],(err3,results3)=>{
+        if (err3) {
+          console.error("Error al actualizar el detalle de reserva:", err3);
+          return res.status(500).json({ error: "Error al actualizar el detalle de reserva" });
+        }
+
+        res.json({ mensaje: "Reserva actualizada con éxito" });
+      })
+    })
+
+  })
+
+}
+
+
+module.exports={getOneCancha, getHorariosCancha,postReserva,getReservas,deleteReservas, updateReserva }

@@ -1,7 +1,7 @@
 const conection =require("../config/database.js")
 
 const getAllCanchas = (req, res) => {
-  const consulta = "select * from canchas";
+  const consulta = "select * from canchas where id_cancha=1";
 
   conection.query(consulta, (err, results) => {
     if (err) throw err;
