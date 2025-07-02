@@ -6,7 +6,7 @@ router.get("/",horariosControllers.getHorarios)
 
 router.get("/:id",horariosControllers.getHorario)
 
-router.get("/horarios-disponibles",horariosControllers.getHorariosDisponibles)
+router.post("/horarios-disponibles",horariosControllers.getHorariosDisponibles)
 
 router.post("/create",horariosControllers.createHorario)
 

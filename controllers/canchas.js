@@ -1,11 +1,10 @@
-const conection =require("../config/database.js")
+const conection = require("../config/database.js");
 
 const getAllCanchas = (req, res) => {
-  const consulta = "select * from canchas where estado_cancha=1";
+  const consulta = "select * from canchas where estado_cancha = true";
 
   conection.query(consulta, (err, results) => {
     if (err) throw err;
-
     if (results.length === 0) {
       res.send("no hay canchas");
     } else {
@@ -17,7 +16,8 @@ const getAllCanchas = (req, res) => {
 const getOneCancha = (req, res) => {
   const id = req.params.id;
 
-  const consulta = "select * from canchas where id_cancha=?";
+  const consulta =
+    "select id_cancha, imagen_cancha, tipo_cancha, precio_cancha from canchas where id_cancha=?";
 
   conection.query(consulta, [id], (err, results) => {
     if (err) throw err;
@@ -25,51 +25,62 @@ const getOneCancha = (req, res) => {
     if (results.length === 0) {
       res.status(404).send("No se encontró la cancha");
     } else {
-      res.json(results[0]); // enviás solo la cancha, no un array
+      res.json({ results: results[0] }); // enviás solo la cancha, no un array
     }
   });
 };
 
-const createCanchas=(req,res)=>{
-  const {imagen_cancha,precio_cancha}=req.body
+const createCanchas = (req, res) => {
+  const { imagen_cancha, tipo_cancha, precio_cancha } = req.body;
 
-  const estado_cancha=1;
+  const consulta = `insert into canchas (imagen_cancha,tipo_cancha,precio_cancha)
+  values(?,?,?)`;
 
-  const consulta =`insert into canchas (imagen_cancha,precio_cancha,estado_cancha)
-  values(?,?,?)`
+  conection.query(
+    consulta,
+    [imagen_cancha, tipo_cancha, precio_cancha],
+    (err, results) => {
+      if (err) throw err;
 
-  conection.query(consulta,[imagen_cancha,precio_cancha,estado_cancha],(err,results)=>{
+      res.status(200).send({ message: "cancha creada con exito" });
+    }
+  );
+};
 
-    if(err) throw err;
+const DeleteCancha = (req, res) => {
+  //eliminado logico de canchas
+  const {id_cancha} = req.params;
 
-    res.status(200).send({message:"cancha creada con exito"})
+  const consulta = `update canchas set estado_cancha = false where id_cancha = ?`;
 
-  })
-}
+  conection.query(consulta, [id_cancha], (err, results) => {
+    if (err) throw err;
+    res.status(200).send({ message: "cancha eliminada" });
+  });
+};
 
-const DeleteCancha=(req,res)=>{ //eliminado logico de canchas
-  const id_cancha= req.params
+const updateCanchas = (req, res) => {
+  const { id } = req.params;
 
-  const consulta=`update canchas set estado_cancha=0 where id_cancha=?`
+  const { imagen_cancha, tipo_cancha, precio_cancha } = req.body;
 
-  conection.query(consulta,[id_cancha],(err,results)=>{
-    if(err) throw err;
-    res.status(200).send({message:"cancha eliminada"})
-  })
+  const consulta = `update canchas set imagen_cancha=?, precio_cancha=?, tipo_cancha = ?
+  where id_cancha=?`;
 
-}
+  conection.query(
+    consulta,
+    [imagen_cancha, precio_cancha, tipo_cancha, id],
+    (err, results) => {
+      if (err) throw err;
+      res.status(200).send({ message: "actualizacion exitosa" });
+    }
+  );
+};
 
-
-const updateCanchas=(req,res)=>{
-  const {id_cancha,imagen_cancha,precio_cancha,estado_cancha}=req.body
-
-  const consulta =`update canchas set imagen_cancha=?, precio_cancha=?, estado_cancha=?
-  where id_cancha=?`
-
-  conection.query(consulta,[imagen_cancha,precio_cancha,estado_cancha,id_cancha],(err,results)=>{
-    if(err) throw err;
-    res.status(200).send({message:"actualizacion exitosa"})
-  })
-}
-
-module.exports =  {getAllCanchas,getOneCancha,createCanchas,DeleteCancha, updateCanchas};
+module.exports = {
+  getAllCanchas,
+  getOneCancha,
+  createCanchas,
+  DeleteCancha,
+  updateCanchas,
+};

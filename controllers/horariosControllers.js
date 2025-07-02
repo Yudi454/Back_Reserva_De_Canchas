@@ -1,4 +1,5 @@
-const  conection  = require("../config/database");
+const conection = require("../config/database");
+const dayjs = require("dayjs");
 
 const getHorarios = (req, res) => {
   const consulta =
@@ -23,11 +24,16 @@ const getHorario = (req, res) => {
 const getHorariosDisponibles = (req, res) => {
   const { dia } = req.body;
 
-  const consulta =
-    "SELECT hora_inicio,hora_fin FROM HORARIOS h WHERE h.id_horario NOT IN (SELECT dv.id_horario FROM DETALLE_RESERVAS dv JOIN RESERVAS r ON r.id_reserva = dv.id_reserva WHERE r.dia_reserva = ?) AND h.estado_horario = true";
+  const fechaFormateada = dayjs(dia).format("YYYY-MM-DD");
 
-  conection.query(consulta, [dia], (err, results) => {
+  console.log(dia);
+
+  const consulta =
+    "SELECT h.id_horario, h.hora_inicio, h.hora_fin FROM HORARIOS h WHERE h.estado_horario = true AND h.id_horario NOT IN (SELECT dr.id_horario FROM DETALLE_RESERVAS dr JOIN RESERVAS r ON r.id_reserva = dr.id_reserva WHERE r.dia_reserva = ?)";
+
+  conection.query(consulta, [fechaFormateada], (err, results) => {
     if (err) throw err;
+
     res.json(results);
   });
 };
