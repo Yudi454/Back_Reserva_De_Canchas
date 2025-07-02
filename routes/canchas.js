@@ -1,11 +1,13 @@
 const express=require("express")
 const router = express.Router()
-const {getAllCanchas,patchCancha, createCanchas,updateCanchas} = require("../controllers/canchas")
+const {getAllCanchas,getOneCancha,DeleteCancha, createCanchas,updateCanchas} = require("../controllers/canchas")
 
 
 router.get("/",getAllCanchas);
 
-router.patch("/:id_cancha",patchCancha);
+router.get("/:id", getOneCancha)
+
+router.patch("/:id_cancha",DeleteCancha);
 
 router.post("/create",createCanchas);
 

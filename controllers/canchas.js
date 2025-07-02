@@ -1,7 +1,7 @@
 const conection =require("../config/database.js")
 
 const getAllCanchas = (req, res) => {
-  const consulta = "select * from canchas where id_cancha=1";
+  const consulta = "select * from canchas where estado_cancha=1";
 
   conection.query(consulta, (err, results) => {
     if (err) throw err;
@@ -10,6 +10,22 @@ const getAllCanchas = (req, res) => {
       res.send("no hay canchas");
     } else {
       res.json(results);
+    }
+  });
+};
+
+const getOneCancha = (req, res) => {
+  const id = req.params.id;
+
+  const consulta = "select * from canchas where id_cancha=?";
+
+  conection.query(consulta, [id], (err, results) => {
+    if (err) throw err;
+
+    if (results.length === 0) {
+      res.status(404).send("No se encontró la cancha");
+    } else {
+      res.json(results[0]); // enviás solo la cancha, no un array
     }
   });
 };
@@ -31,7 +47,7 @@ const createCanchas=(req,res)=>{
   })
 }
 
-const patchCancha=(req,res)=>{ //eliminado logico de canchas
+const DeleteCancha=(req,res)=>{ //eliminado logico de canchas
   const id_cancha= req.params
 
   const consulta=`update canchas set estado_cancha=0 where id_cancha=?`
@@ -56,4 +72,4 @@ const updateCanchas=(req,res)=>{
   })
 }
 
-module.exports =  {getAllCanchas,createCanchas,patchCancha, updateCanchas};
+module.exports =  {getAllCanchas,getOneCancha,createCanchas,DeleteCancha, updateCanchas};

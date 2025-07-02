@@ -1,21 +1,7 @@
 const conection =require("../config/database.js")
 
 
-const getOneCancha = (req, res) => {
-  const id = req.params.id;
 
-  const consulta = "select * from canchas where id_cancha=?";
-
-  conection.query(consulta, [id], (err, results) => {
-    if (err) throw err;
-
-    if (results.length === 0) {
-      res.status(404).send("No se encontró la cancha");
-    } else {
-      res.json(results[0]); // enviás solo la cancha, no un array
-    }
-  });
-};
 
 const getHorariosCancha = (req, res) => {
   const { id } = req.params;
@@ -45,6 +31,33 @@ const getHorariosCancha = (req, res) => {
     res.json(results);
   });
 };
+
+const getOneReserva=(req,res)=>{
+  const id_reserva=req.body
+
+  const consulta = `select * from reserva where id_reserva=?`
+
+  conection.query(consulta,[id_reserva],(err,results)=>{
+    if(err) return res.status(500).json({error:"error al traer la reserva",err})
+
+    if(results.length===0) return res.status(200).json({message:"la reserva no existe"})
+  
+    res.status(200).send(results)
+  })
+}
+
+const getAllReservas=(req,res)=>{
+  const consulta=`select * from reservas`
+
+  conection.query(consulta,(err,results)=>{
+    if(err){
+      console.error("error buscando reservas",err)
+      res.status(500).send(({ error: "Error al buscar reservas" }))
+    }
+
+    res.status(200).send(results)
+  })
+}
 
 const postReserva = (req, res) => {
 
@@ -130,7 +143,7 @@ const getReservas=(req,res)=>{
   JOIN Detalle_Reservas dr ON r.id_reserva = dr.id_reserva
   JOIN Canchas c ON dr.id_cancha = c.id_cancha
   JOIN Horarios h ON dr.id_horario = h.id_horario
-  WHERE r.id_cliente = ?;`;
+  WHERE r.id_cliente = ? AND dr.estado_detalle_reserva = 1;`;
 
   conection.query(consulta,[usuario], (err, results) => {
     if (err) throw err;
@@ -146,13 +159,13 @@ const getReservas=(req,res)=>{
 const deleteReservas=(req,res)=>{
   const {id_reserva} = req.params
 
-  const consultaDetalle= "DELETE FROM Detalle_Reservas WHERE id_reserva = ?;"
+  const consultaDetalle= "update Detalle_Reservas set estado_detalle_reserva=0 WHERE id_reserva = ?;"
 
   conection.query(consultaDetalle,[id_reserva],(err)=>{
     if(err) return res.status(500).json({error:"error al eliminar el detalle:"});
 
 
-    const consultaReserva="DELETE FROM Reservas WHERE id_reserva = ?;"
+    const consultaReserva="update Reservas set estado_reserva=0 WHERE id_reserva = ?;"
 
     conection.query(consultaReserva,[id_reserva],(err2)=>{
       if(err2) return res.status(500).json({error:"error al eliminar la reserva back"})
@@ -211,4 +224,4 @@ const updateReserva=(req,res)=>{
 }
 
 
-module.exports={getOneCancha, getHorariosCancha,postReserva,getReservas,deleteReservas, updateReserva }
+module.exports={getHorariosCancha,getOneReserva,getAllReservas,postReserva,getReservas,deleteReservas, updateReserva }
