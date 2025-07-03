@@ -19,7 +19,7 @@ router.get("/misReservas/:id", getReservas);
 
 router.post("/create", postReserva);
 
-router.post("/cargarVentas/:id", cargarReservas)
+router.post("/cargarReservas/:id", cargarReservas)
 
 router.patch("/update/:id", updateReserva);
 
