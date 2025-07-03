@@ -117,6 +117,51 @@ const createVenta = (req, res) => {
   });
 };
 
+const cargarVentas = (req, res) => {
+  const { id } = req.params;
+
+  const productos = req.body;
+
+  let total_venta = 0;
+
+  productos.forEach((p) => {
+    total_venta += p.total_venta;
+  });
+
+  const fechaFormateada = dayjs(new Date()).format("YYYY-MM-DD");
+
+  let productosCargados = 0;
+
+  const consulta =
+    "INSERT INTO VENTAS (id_usuario,fecha_venta,total_venta) VALUES (?,?,?)";
+
+  conection.query(
+    consulta,
+    [id, fechaFormateada, total_venta],
+    (err, results) => {
+      if (err) throw err;
+      const id_venta = results.insertId;
+
+      productos.map((p) => {
+        const consulta =
+          "INSERT INTO DETALLE_VENTAS (id_producto,id_venta,cantidad,subtotal_detalle_venta) VALUES (?,?,?,?)";
+
+        conection.query(
+          consulta,
+          [p.id_producto, id_venta, p.cantidad, p.total_venta],
+          (err, results) => {
+            if (err) throw err;
+            productosCargados++;
+            if (productosCargados === productos.length) {
+              res.send({ message: "Venta creada con exito" });
+            }
+          }
+        );
+      });
+    }
+  );
+};
+
 const updateVenta = (req, res) => {
   const { id } = req.params;
   const { productos, ...ventaData } = req.body;
@@ -223,4 +268,5 @@ module.exports = {
   createVenta,
   updateVenta,
   deleteVenta,
+  cargarVentas,
 };

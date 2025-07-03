@@ -8,6 +8,8 @@ router.get("/:id",ventasControllers.getVenta)
 
 router.post("/create",ventasControllers.createVenta);
 
+router.post("/cargarVentas/:id",ventasControllers.cargarVentas)
+
 router.patch("/update/:id",ventasControllers.updateVenta)
 
 router.delete("/delete/:id",ventasControllers.deleteVenta)
