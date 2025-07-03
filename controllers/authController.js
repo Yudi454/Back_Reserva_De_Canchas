@@ -15,11 +15,15 @@ const login = (req, res) => {
       );
 
       if (match) {
+        //SI ES USUARIO
+        console.log(results);
+
         return res.json({
           message: "Usuario logueado con exito",
           results: {
-            id_cliente: results[0].id_clientes,
+            id_cliente: results[0].id_cliente,
             usuario: results[0].usuario,
+            email_cliente: results[0].email_cliente,
           },
         });
       } else {
@@ -36,9 +40,14 @@ const login = (req, res) => {
         );
         console.log(match);
         if (match) {
+          //SI ES CLIENTE
+
           return res.json({
             message: "Usuario logueado con exito",
-            results: results,
+            results: {
+              id_usuario: results[0].id_clientes,
+              email_usuario: results[0].email_usuario,
+            },
           });
         } else {
           res.send({ message: "Email o contraseña incorrectos" });
