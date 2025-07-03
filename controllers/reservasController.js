@@ -88,10 +88,42 @@ const getAllReservas = (req, res) => {
   });
 };
 
+const getReservas = (req, res) => {
+  const { id } = req.params;
+  console.log(id);
+
+  if (!id) {
+    return res.status(400).json({ error: "Falta el id del usuario" });
+  }
+
+  const consulta = `SELECT 
+  r.id_reserva,
+  r.dia_reserva,
+  c.tipo_cancha,
+  c.precio_cancha,
+  h.hora_inicio,
+  h.hora_fin
+  FROM Reservas r
+  JOIN Detalle_Reservas dr ON r.id_reserva = dr.id_reserva
+  JOIN Canchas c ON dr.id_cancha = c.id_cancha
+  JOIN Horarios h ON dr.id_horario = h.id_horario
+  WHERE r.id_cliente = ? AND dr.estado_detalle_reserva = 1;`;
+
+  conection.query(consulta, [id], (err, results) => {
+    if (err) throw err;
+
+    if (results.length === 0) {
+      res.send([]);
+    } else {
+      res.json(results);
+    }
+  });
+};
+
 const postReserva = (req, res) => {
   const { fecha_reserva, email_cliente, id_cancha, id_horario } = req.body;
 
-  console.log(req.body)
+  console.log(req.body);
 
   const fecha = dayjs(fecha_reserva, "D-M-YYYY").format("YYYY-MM-DD");
 
@@ -148,41 +180,72 @@ const postReserva = (req, res) => {
   });
 };
 
-const getReservas = (req, res) => {
-  const {id} = req.params;
-  console.log(id)
+const cargarReservas = (req, res) => {
+  const { id } = req.params;
+  const reservas = req.body;
 
-  if (!id) {
-    return res.status(400).json({ error: "Falta el id del usuario" });
-  }
+  const consulta =
+    "SELECT hora_inicio,hora_fin FROM HORARIOS WHERE id_horario = ?";
 
-  const consulta = `SELECT 
-  r.id_reserva,
-  r.dia_reserva,
-  c.tipo_cancha,
-  c.precio_cancha,
-  h.hora_inicio,
-  h.hora_fin
-  FROM Reservas r
-  JOIN Detalle_Reservas dr ON r.id_reserva = dr.id_reserva
-  JOIN Canchas c ON dr.id_cancha = c.id_cancha
-  JOIN Horarios h ON dr.id_horario = h.id_horario
-  WHERE r.id_cliente = ? AND dr.estado_detalle_reserva = 1;`;
+  let procesadas = 0;
 
-  conection.query(consulta, [id], (err, results) => {
-    if (err) throw err;
+  reservas.forEach((r) => {
+    const { fecha_reserva, id_horario, id_cancha } = r;
 
-    if (results.length === 0) {
-      res.send([]);
-    } else {
-      res.json(results);
-    }
+    //OBTENER HORA
+    conection.query(consulta, [id_horario], (err, results) => {
+      if (err) throw err;
+
+      const { hora_inicio, hora_fin } = results[0];
+      const inicio = dayjs(`1970-01-01T${hora_inicio}`);
+      const fin = dayjs(`1970-01-01T${hora_fin}`);
+      const duracion = fin.diff(inicio, "hour");
+
+      const consulta = "SELECT precio_cancha FROM CANCHAS WHERE id_cancha = ?";
+
+      //OBTENER PRECIO CANCHA
+      conection.query(consulta, [id_cancha], (err, results) => {
+        if (err) throw err;
+        const precio = results[0].precio_cancha;
+        const total = duracion * precio;
+
+        const consulta =
+          "INSERT INTO RESERVAS (id_cliente, total, dia_reserva) VALUES (?,?,?)";
+
+        //INSERTAR RESERVA
+        conection.query(
+          consulta,
+          [id, total, fecha_reserva],
+          (err, results) => {
+            if (err) throw err;
+
+            const id_reserva = results.insertId;
+
+            const consulta =
+              "INSERT INTO DETALLE_RESERVAS (id_reserva, id_horario,id_cancha) VALUES (?,?,?)";
+
+            //INSERTAR DETALLE RESERVA
+            conection.query(
+              consulta,
+              [id_reserva, id_horario, id_cancha],
+              (err, results) => {
+                if (err) throw err;
+
+                procesadas++;
+                if (procesadas === reservas.length) {
+                  res.send({ message: "Reservas realizadas con éxito" });
+                }
+              }
+            );
+          }
+        );
+      });
+    });
   });
 };
 
 const deleteReservas = (req, res) => {
   const { id } = req.params;
-
 
   const consultaDetalle =
     "update detalle_reservas set estado_detalle_reserva = false WHERE id_reserva = ?;";
@@ -275,4 +338,5 @@ module.exports = {
   getReservas,
   deleteReservas,
   updateReserva,
+  cargarReservas,
 };

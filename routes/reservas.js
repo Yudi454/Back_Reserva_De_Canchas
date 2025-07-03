@@ -8,6 +8,7 @@ const {
   getReservas,
   deleteReservas,
   updateReserva,
+  cargarReservas
 } = require("../controllers/reservasController");
 
 router.get("/", getAllReservas);
@@ -17,6 +18,8 @@ router.get("/:id", getOneReserva);
 router.get("/misReservas/:id", getReservas);
 
 router.post("/create", postReserva);
+
+router.post("/cargarVentas/:id", cargarReservas)
 
 router.patch("/update/:id", updateReserva);
 
