@@ -2,7 +2,7 @@ const conection = require("../config/database");
 
 const getAllClientes = (req, res) => {
   const consulta =
-    "SELECT id_clientes, usuario, email_cliente, telefono_cliente FROM clientes";
+    "SELECT id_cliente, usuario, email_cliente, telefono_cliente FROM clientes";
 
   conection.query(consulta, (err, results) => {
     if (err) throw err;
@@ -14,7 +14,7 @@ const getCliente = (req, res) => {
   const { id } = req.params;
 
   const consulta =
-    "SELECT id_clientes, usuario, email_cliente, telefono_cliente FROM clientes WHERE id_clientes = ?";
+    "SELECT id_cliente, usuario, email_cliente, telefono_cliente FROM clientes WHERE id_cliente = ?";
 
   conection.query(consulta, [id], (err, results) => {
     if (err) throw err;
@@ -23,7 +23,7 @@ const getCliente = (req, res) => {
 
     res.json({
       results: {
-        id_clientes: data.id_clientes,
+        id_cliente: data.id_cliente,
         usuario: data.usuario,
         email_cliente: data.email_cliente,
         telefono_cliente: data.telefono_cliente,
@@ -35,7 +35,7 @@ const getCliente = (req, res) => {
 const deleteClientes = (req, res) => {
   const { id } = req.params;
 
-  const consulta = "DELETE FROM Clientes WHERE id_clientes=?";
+  const consulta = "DELETE FROM Clientes WHERE id_cliente=?";
 
   conection.query(consulta, [id], (err, results) => {
     if (err) throw err;
@@ -50,7 +50,7 @@ const updateClientes = (req, res) => {
   const { usuario, email_cliente, telefono_cliente } = req.body;
 
   const consulta =
-    "UPDATE clientes SET usuario=?, email_cliente=?, telefono_cliente=? WHERE id_clientes=?";
+    "UPDATE clientes SET usuario=?, email_cliente=?, telefono_cliente=? WHERE id_cliente=?";
 
   conection.query(
     consulta,

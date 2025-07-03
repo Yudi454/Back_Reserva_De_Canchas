@@ -12,21 +12,30 @@ const getHorarios = (req, res) => {
 };
 const getHorario = (req, res) => {
   const { id } = req.params;
+
   const consulta =
-    "SELECT id_horario,hora_inicio,hora_fin FROM HORARIOS WHERE ID_HORARIO = ? AND ESTADO_HORARIO = TRUE";
+    "SELECT id_horario,hora_inicio,hora_fin FROM HORARIOS WHERE ID_HORARIO = ? ";
 
   conection.query(consulta, [id], (err, results) => {
     if (err) throw err;
-    res.json(results);
+    console.log(results);
+    const data = results[0];
+    res.json({
+      results: {
+        id_horario: data.id_horario,
+        hora_inicio: data.hora_inicio,
+        hora_fin: data.hora_fin,
+      },
+    });
   });
 };
 
 const getHorariosDisponibles = (req, res) => {
+  console.log("ENTRO");
   const { dia } = req.body;
 
   const fechaFormateada = dayjs(dia).format("YYYY-MM-DD");
 
-  console.log(dia);
 
   const consulta =
     "SELECT h.id_horario, h.hora_inicio, h.hora_fin FROM HORARIOS h WHERE h.estado_horario = true AND h.id_horario NOT IN (SELECT dr.id_horario FROM DETALLE_RESERVAS dr JOIN RESERVAS r ON r.id_reserva = dr.id_reserva WHERE r.dia_reserva = ?)";

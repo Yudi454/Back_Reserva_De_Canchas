@@ -15,7 +15,7 @@ const login = (req, res) => {
       );
 
       if (match) {
-        //SI ES USUARIO
+        //SI ES CLIENTE
         console.log(results);
 
         return res.json({
@@ -40,13 +40,17 @@ const login = (req, res) => {
         );
         console.log(match);
         if (match) {
-          //SI ES CLIENTE
+          //SI ES USUARIO
+
+          console.log(results);
+          
 
           return res.json({
             message: "Usuario logueado con exito",
             results: {
-              id_usuario: results[0].id_clientes,
+              id_usuario: results[0].id_Usuario,
               email_usuario: results[0].email_usuario,
+              rol: results[0].rol
             },
           });
         } else {
@@ -59,6 +63,9 @@ const login = (req, res) => {
 
 const register = async (req, res) => {
   const { usuario, contraseña, email, telefono } = req.body;
+
+  console.log(req.body);
+  
 
   let contraseñaHash = await bcrypt.hash(contraseña, 10);
 
