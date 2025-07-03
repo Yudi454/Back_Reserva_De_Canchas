@@ -91,6 +91,8 @@ const getAllReservas = (req, res) => {
 const postReserva = (req, res) => {
   const { fecha_reserva, email_cliente, id_cancha, id_horario } = req.body;
 
+  console.log(req.body)
+
   const fecha = dayjs(fecha_reserva, "D-M-YYYY").format("YYYY-MM-DD");
 
   const consulta = "SELECT id_cliente FROM clientes WHERE email_cliente = ?";
@@ -148,6 +150,7 @@ const postReserva = (req, res) => {
 
 const getReservas = (req, res) => {
   const usuario = req.query.usuario;
+  console.log(usuario)
 
   if (!usuario) {
     return res.status(400).json({ error: "Falta el id del usuario" });
