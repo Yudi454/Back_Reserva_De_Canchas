@@ -149,10 +149,10 @@ const postReserva = (req, res) => {
 };
 
 const getReservas = (req, res) => {
-  const usuario = req.query.usuario;
-  console.log(usuario)
+  const {id} = req.params;
+  console.log(id)
 
-  if (!usuario) {
+  if (!id) {
     return res.status(400).json({ error: "Falta el id del usuario" });
   }
 
@@ -169,7 +169,7 @@ const getReservas = (req, res) => {
   JOIN Horarios h ON dr.id_horario = h.id_horario
   WHERE r.id_cliente = ? AND dr.estado_detalle_reserva = 1;`;
 
-  conection.query(consulta, [usuario], (err, results) => {
+  conection.query(consulta, [id], (err, results) => {
     if (err) throw err;
 
     if (results.length === 0) {

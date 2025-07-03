@@ -14,7 +14,7 @@ router.get("/", getAllReservas);
 
 router.get("/:id", getOneReserva);
 
-router.get("/misReservas", getReservas);
+router.get("/misReservas/:id", getReservas);
 
 router.post("/create", postReserva);
 
