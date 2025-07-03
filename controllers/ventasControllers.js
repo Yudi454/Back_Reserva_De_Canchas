@@ -1,4 +1,4 @@
-const { conection } = require("../config/database");
+const conection = require("../config/database");
 
 const getVentas = (req, res) => {
   const consulta =
@@ -118,7 +118,7 @@ const updateVenta = (req, res) => {
       const consulta =
         "UPDATE DETALLE_VENTAS SET ID_PRODUCTO = ?,CANTIDAD = ?,SUBTOTAL_DETALLE_VENTA = ? WHERE ID_VENTA = ?";
 
-        const subtotal = cantidad * precio_producto
+      const subtotal = cantidad * precio_producto;
 
       conection.query(
         consulta,

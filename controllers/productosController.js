@@ -1,4 +1,4 @@
-const { conection } = require("../config/database");
+const  conection  = require("../config/database");
 
 const getProductos = (req, res) => {
   const consulta =

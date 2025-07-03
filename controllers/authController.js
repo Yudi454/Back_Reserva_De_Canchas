@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt");
-const { conection } = require("../config/database");
+const conection = require("../config/database");
 
 const login = (req, res) => {
   const { email, contraseña } = req.body;
