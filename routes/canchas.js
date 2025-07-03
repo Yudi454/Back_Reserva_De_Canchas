@@ -1,19 +1,21 @@
-const express=require("express")
-const router = express.Router()
-const {getAllCanchas, getOneCancha, getHorariosCancha,postReserva,getReservas,deleteReservas} = require("../controllers/canchas")
+const express = require("express");
+const router = express.Router();
+const {
+  getAllCanchas,
+  getOneCancha,
+  DeleteCancha,
+  createCanchas,
+  updateCanchas,
+} = require("../controllers/canchas");
 
+router.get("/", getAllCanchas);
 
-router.get("/",getAllCanchas);
+router.get("/:id", getOneCancha);
 
-router.get("/:id", getOneCancha)
+router.patch("/update/:id", updateCanchas);
 
-router.get("/:id/turnos", getHorariosCancha)
+router.post("/create", createCanchas);
 
-router.post("/reservas",postReserva)
+router.delete("/delete/:id_cancha", DeleteCancha);
 
-router.get("/misReservas",getReservas)
-
-router.delete("/reservas/:id_reserva",deleteReservas)
-
-
-module.exports= router
+module.exports = router;
