@@ -46,8 +46,6 @@ const createUsuario = async (req, res) => {
     telefono_usuario,
   } = req.body;
 
-  const contraseñaHash = await bcrypt.hash(contraseña_usuario, 10);
-
   const consulta =
     "INSERT INTO USUARIOS (NOMBRE_USUARIO,APELLIDO_USUARIO,CONTRASEÑA_USUARIO,ROL,DNI,EMAIL_USUARIO,TELEFONO_USUARIO) VALUES (?,?,?,?,?,?,?)";
 
@@ -56,7 +54,7 @@ const createUsuario = async (req, res) => {
     [
       nombre_usuario,
       apellido_usuario,
-      contraseñaHash,
+      contraseña_usuario,
       rol,
       dni,
       email_usuario,
@@ -76,15 +74,14 @@ const updateUsuario = async (req, res) => {
     nombre_usuario,
     apellido_usuario,
     rol,
+    contraseña_usuario,
     dni,
     email_usuario,
     telefono_usuario,
   } = req.body;
 
-  //const contraseñaHash = bcrypt.hash(contraseña, 10);
-
   const consulta =
-    "UPDATE USUARIOS SET NOMBRE_USUARIO = ?, APELLIDO_USUARIO = ?, ROL = ?, DNI = ?, EMAIL_USUARIO = ?, TELEFONO_USUARIO = ? WHERE ID_USUARIO = ?";
+    "UPDATE USUARIOS SET NOMBRE_USUARIO = ?, APELLIDO_USUARIO = ?, ROL = ?, CONTRASEÑA_USUARIO = ?, DNI = ?, EMAIL_USUARIO = ?, TELEFONO_USUARIO = ? WHERE ID_USUARIO = ?";
 
   conection.query(
     consulta,
@@ -92,6 +89,7 @@ const updateUsuario = async (req, res) => {
       nombre_usuario,
       apellido_usuario,
       rol,
+      contraseña_usuario,
       dni,
       email_usuario,
       telefono_usuario,
