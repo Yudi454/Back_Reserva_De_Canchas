@@ -5,10 +5,11 @@ const login = (req, res) => {
   const { email, contraseña } = req.body;
 
   const consulta =
-    "SELECT * FROM CLIENTES WHERE EMAIL_CLIENTE = ? AND CONTRASEÑA_CLIENTE = ? ";
+    "select * from clientes where email_cliente = ? and contraseña_cliente = ?";
 
   conection.query(consulta, [email, contraseña], async (err, results) => {
     if (err) throw err;
+
     if (results.length > 0) {
       //SI ES CLIENTE
       return res.json({
@@ -25,15 +26,22 @@ const login = (req, res) => {
 
       conection.query(consulta, [email, contraseña], async (err, results) => {
         if (err) throw err;
-        //SI ES USUARIO
-        return res.json({
-          message: "Usuario logueado con exito",
-          results: {
-            id_usuario: results[0].id_Usuario,
-            email_usuario: results[0].email_usuario,
-            rol: results[0].rol,
-          },
-        });
+        if (results.length > 0) {
+          //SI ES USUARIO
+          return res.json({
+            message: "Usuario logueado con exito",
+            results: {
+              id_usuario: results[0].id_Usuario,
+              email_usuario: results[0].email_usuario,
+              rol: results[0].rol,
+            },
+          });
+        } else {
+          // No se encontró ni en CLIENTES ni en USUARIOS
+          return res
+            .status(401)
+            .json({ message: "Email o contraseña incorrectos" });
+        }
       });
     }
   });
@@ -49,8 +57,18 @@ const register = async (req, res) => {
     consulta,
     [usuario, contraseña, email, telefono],
     (err, results) => {
-      if (err) throw err;
-      res.send({ message: "Usuario creado con exito" });
+      if (err) {
+        if (err.code === "ER_DUP_ENTRY") {
+          // Error por clave duplicada
+          return res
+            .status(409)
+            .send({ message: "El email ya está registrado" });
+        }
+        // Otros errores
+        return res.status(500).send({ message: "Error interno del servidor" });
+      }
+
+      res.send({ message: "Usuario creado con éxito" });
     }
   );
 };
