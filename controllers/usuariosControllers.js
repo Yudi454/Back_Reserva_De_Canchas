@@ -19,7 +19,7 @@ const getUsuario = (req, res) => {
 
   conection.query(consulta, [id], (err, results) => {
     if (err) throw err;
-    res.json(results);
+    res.json({results: results[0]});
   });
 };
 

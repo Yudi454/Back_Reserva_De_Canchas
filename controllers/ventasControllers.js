@@ -3,7 +3,7 @@ const dayjs = require("dayjs");
 
 const getVentas = (req, res) => {
   const consulta =
-    "SELECT id_venta,nombre_usuario,apellido_usuario,fecha_venta,total_venta FROM VENTAS V JOIN USUARIOS U ON V.ID_USUARIO = U.ID_USUARIO WHERE ESTADO_VENTA = TRUE";
+    "SELECT v.id_venta,u.nombre_usuario,u.apellido_usuario,v.fecha_venta,v.total_venta FROM VENTAS V JOIN USUARIOS U ON V.ID_USUARIO = U.ID_USUARIO WHERE ESTADO_VENTA = TRUE";
 
   conection.query(consulta, (err, results) => {
     if (err) throw err;
@@ -19,13 +19,13 @@ const getVentas = (req, res) => {
     }));
     res.json(ventas);
   });
-};
+} 
 
 const getVenta = (req, res) => {
   const { id } = req.params;
 
   const consulta =
-    "SELECT v.id_venta,v.fecha_venta,v.total_venta, u.email_usuario, u.nombre_usuario,u.apellido_usuario,u.telefono_usuario,p.id_producto, p.nombre_producto, p.precio_producto,dv.cantidad,dv.subtotal_detalle_venta FROM VENTAS v JOIN USUARIOS u JOIN DETALLE_VENTAS dv JOIN PRODUCTOS p ON v.id_usuario = u.id_usuario AND v.id_venta = dv.id_venta and dv.id_producto = p.id_producto WHERE v.id_venta =?";
+    "SELECT v.id_venta,v.fecha_venta,v.total_venta, u.email_usuario, u.nombre_usuario,u.apellido_usuario,u.telefono_usuario,p.id_producto,p.imagen_producto, p.nombre_producto, p.precio_producto,dv.cantidad,dv.subtotal_detalle_venta FROM VENTAS v JOIN USUARIOS u JOIN DETALLE_VENTAS dv JOIN PRODUCTOS p ON v.id_usuario = u.id_usuario AND v.id_venta = dv.id_venta and dv.id_producto = p.id_producto WHERE v.id_venta =?";
 
   conection.query(consulta, [id], (err, results) => {
     if (err) throw err;
@@ -49,11 +49,14 @@ const getVenta = (req, res) => {
         cantidad: result.cantidad,
         subtotal_detalle_venta: result.subtotal_detalle_venta,
         precio_producto: result.precio_producto,
+        imagen: result.imagen_producto
       })
     );
 
     if (venta.productos.length > 0) {
       res.json({ results: venta });
+      console.log(venta);
+      
     }
   });
 };

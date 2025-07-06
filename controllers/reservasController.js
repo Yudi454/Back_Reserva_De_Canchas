@@ -33,7 +33,7 @@ const getHorariosCancha = (req, res) => {
 const getOneReserva = (req, res) => {
   const { id } = req.params;
 
-  const consulta = `SELECT r.id_reserva, cl.usuario, cl.email_cliente, cl.telefono_cliente, r.total, r.dia_reserva, h.hora_inicio, h.hora_fin, ca.id_cancha, ca.tipo_cancha, ca.precio_cancha
+  const consulta = `SELECT r.id_reserva, cl.usuario, cl.email_cliente, cl.telefono_cliente, r.total, r.dia_reserva, h.hora_inicio, h.hora_fin, ca.id_cancha, ca.imagen_cancha, ca.tipo_cancha, ca.precio_cancha
 FROM RESERVAS r
 JOIN CLIENTES cl ON r.id_cliente = cl.id_cliente
 JOIN DETALLE_RESERVAS dv ON dv.id_reserva = r.id_reserva
@@ -63,6 +63,7 @@ WHERE r.id_reserva = ?
         id_cancha: data.id_cancha,
         tipo_cancha: data.tipo_cancha,
         precio_cancha: data.precio_cancha,
+        imgaen: data.imagen_cancha
       },
     });
   });
@@ -70,7 +71,7 @@ WHERE r.id_reserva = ?
 
 const getAllReservas = (req, res) => {
   const consulta = `SELECT r.id_reserva, c.usuario, r.total, dia_reserva, h.hora_inicio, h.hora_fin FROM RESERVAS r JOIN CLIENTES c JOIN DETALLE_RESERVAS dv JOIN HORARIOS h
-  ON r.id_cliente = c.id_cliente and dv.id_horario = h.id_horario WHERE estado_detalle_reserva = true
+  ON r.id_cliente = c.id_cliente and dv.id_horario = h.id_horario and r.id_reserva = dv.id_reserva WHERE estado_detalle_reserva = true
   `;
 
   conection.query(consulta, (err, results) => {
@@ -85,6 +86,9 @@ const getAllReservas = (req, res) => {
     }));
 
     res.json(reservasFormateadas);
+
+    console.log(reservasFormateadas);
+    
   });
 };
 

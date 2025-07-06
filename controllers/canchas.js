@@ -9,6 +9,8 @@ const getAllCanchas = (req, res) => {
       res.send("no hay canchas");
     } else {
       res.json(results);
+      console.log(results);
+      
     }
   });
 };
@@ -25,7 +27,13 @@ const getOneCancha = (req, res) => {
     if (results.length === 0) {
       res.status(404).send("No se encontró la cancha");
     } else {
-      res.json({ results: results[0] }); // enviás solo la cancha, no un array
+      const data = results[0]
+      res.json({ results: {
+        id_cancha: data.id_cancha,
+        imagen: data.imagen_cancha,
+        tipo_cancha: data.tipo_cancha,
+        precio_cancha: data.precio_cancha
+      } }); // enviás solo la cancha, no un array
     }
   });
 };

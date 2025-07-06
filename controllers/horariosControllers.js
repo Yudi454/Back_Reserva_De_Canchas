@@ -17,7 +17,12 @@ const getHorario = (req, res) => {
 
   conection.query(consulta, [id], (err, results) => {
     if (err) throw err;
-    res.json(results);
+    const data = results[0]
+    res.json({results: {
+      id_horario: data.id_horario,
+      hora_inicio: data.hora_inicio,
+      hora_fin: data.hora_inicio
+    }});
   });
 };
 
