@@ -16,7 +16,7 @@ const getUsuario = (req, res) => {
   
 
   const consulta =
-    "SELECT id_usuario, nombre_usuario, apellido_usuario, dni, email_usuario, rol, telefono_usuario FROM USUARIOS WHERE id_usuario = ?";
+    "SELECT id_usuario, nombre_usuario, apellido_usuario,imagen_usuario, contraseña_usuario, dni, email_usuario, rol, telefono_usuario FROM USUARIOS WHERE id_usuario = ?";
 
   conection.query(consulta, [id], (err, results) => {
     if (err) throw err;
@@ -28,10 +28,15 @@ const getUsuario = (req, res) => {
         nombre_usuario: data.nombre_usuario,
         apellido_usuario: data.apellido_usuario,
         dni: data.dni,
+        imagen_usuario: data.imagen_usuario,
+        imagen: data.imagen_usuario,
+        contraseña_usuario: data.contraseña_usuario,
         email_usuario: data.email_usuario,
         rol: data.rol,
         telefono_usuario: data.telefono_usuario
     }});
+    console.log(data);
+    
   });
 };
 
@@ -78,10 +83,11 @@ const updateUsuario = async (req, res) => {
     dni,
     email_usuario,
     telefono_usuario,
+    imagen_usuario
   } = req.body;
 
   const consulta =
-    "UPDATE USUARIOS SET NOMBRE_USUARIO = ?, APELLIDO_USUARIO = ?, ROL = ?, CONTRASEÑA_USUARIO = ?, DNI = ?, EMAIL_USUARIO = ?, TELEFONO_USUARIO = ? WHERE ID_USUARIO = ?";
+    "UPDATE USUARIOS SET NOMBRE_USUARIO = ?, APELLIDO_USUARIO = ?, ROL = ?, CONTRASEÑA_USUARIO = ?, DNI = ?, EMAIL_USUARIO = ?, TELEFONO_USUARIO = ?, IMAGEN_USUARIO = ? WHERE ID_USUARIO = ?";
 
   conection.query(
     consulta,
@@ -93,6 +99,7 @@ const updateUsuario = async (req, res) => {
       dni,
       email_usuario,
       telefono_usuario,
+      imagen_usuario,
       id,
     ],
     (err, results) => {

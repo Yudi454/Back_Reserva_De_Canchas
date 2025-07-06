@@ -17,20 +17,19 @@ const getCliente = (req, res) => {
   
 
   const consulta =
-    "SELECT id_cliente, usuario, email_cliente, telefono_cliente FROM clientes WHERE id_cliente = ?";
+    "SELECT id_cliente, usuario, contraseña_cliente, email_cliente, telefono_cliente FROM clientes WHERE id_cliente = ?";
 
   conection.query(consulta, [id], (err, results) => {
     if (err) throw err;
 
     const data = results[0];
-
-    console.log(data);
     
 
     res.json({
       results: {
         id_cliente: data.id_cliente,
         usuario: data.usuario,
+        contraseña_cliente: data.contraseña_cliente,
         email_cliente: data.email_cliente,
         telefono_cliente: data.telefono_cliente,
       },
@@ -53,14 +52,14 @@ const deleteClientes = (req, res) => {
 const updateClientes = (req, res) => {
   const { id } = req.params;
 
-  const { usuario, email_cliente, telefono_cliente } = req.body;
+  const { usuario, email_cliente, telefono_cliente, contraseña_cliente } = req.body;
 
   const consulta =
-    "UPDATE clientes SET usuario=?, email_cliente=?, telefono_cliente=? WHERE id_cliente=?";
+    "UPDATE clientes SET usuario=?, email_cliente=?, telefono_cliente=?, contraseña_cliente = ? WHERE id_cliente=?";
 
   conection.query(
     consulta,
-    [usuario, email_cliente, telefono_cliente, id],
+    [usuario, email_cliente, telefono_cliente, contraseña_cliente, id],
     (err, results) => {
       if (err) throw err;
 
