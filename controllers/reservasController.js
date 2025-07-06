@@ -71,8 +71,9 @@ WHERE r.id_reserva = ?
 
 const getAllReservas = (req, res) => {
   const consulta = `SELECT r.id_reserva, c.usuario, r.total, dia_reserva, h.hora_inicio, h.hora_fin FROM RESERVAS r JOIN CLIENTES c JOIN DETALLE_RESERVAS dv JOIN HORARIOS h
-  ON r.id_cliente = c.id_cliente and dv.id_horario = h.id_horario and r.id_reserva = dv.id_reserva WHERE estado_detalle_reserva = true
-  `;
+
+  ON r.id_cliente = c.id_cliente and dv.id_horario = h.id_horario WHERE estado_detalle_reserva = true`;
+
 
   conection.query(consulta, (err, results) => {
     if (err) {
@@ -111,7 +112,10 @@ const getReservas = (req, res) => {
   JOIN Detalle_Reservas dr ON r.id_reserva = dr.id_reserva
   JOIN Canchas c ON dr.id_cancha = c.id_cancha
   JOIN Horarios h ON dr.id_horario = h.id_horario
-  WHERE r.id_cliente = ? AND dr.estado_detalle_reserva = 1;`;
+  WHERE r.id_cliente = ? 
+  AND dr.estado_detalle_reserva = 1
+  AND r.dia_reserva >= CURDATE()
+  ORDER BY r.dia_reserva ASC, h.hora_inicio ASC;`;
 
   conection.query(consulta, [id], (err, results) => {
     if (err) throw err;
