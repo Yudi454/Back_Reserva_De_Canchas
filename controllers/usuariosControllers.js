@@ -1,46 +1,52 @@
 const conection = require("../config/database");
-const bcrypt = require("bcrypt");
 
 const getUsuarios = (req, res) => {
   const consulta =
     "SELECT id_usuario, nombre_usuario, apellido_usuario, dni, email_usuario, rol, telefono_usuario FROM USUARIOS WHERE ESTADO_USUARIO = TRUE";
 
   conection.query(consulta, (err, results) => {
-    if (err) throw err;
-    res.json(results);
+    if (err) {
+      return res.status(500).json({ message: "Error al obtener usuarios" });
+    }
+
+    return res.json(results);
   });
 };
 
 const getUsuario = (req, res) => {
   const { id } = req.params;
-  
 
   const consulta =
-    "SELECT id_usuario, nombre_usuario, apellido_usuario,imagen_usuario, contraseña_usuario, dni, email_usuario, rol, telefono_usuario FROM USUARIOS WHERE id_usuario = ?";
+    "SELECT id_usuario, nombre_usuario, apellido_usuario, imagen_usuario, contraseña_usuario, dni, email_usuario, rol, telefono_usuario FROM USUARIOS WHERE id_usuario = ?";
 
   conection.query(consulta, [id], (err, results) => {
-    if (err) throw err;
+    if (err) {
+      return res.status(500).json({ message: "Error al obtener usuario" });
+    }
 
-    const data = results[0]
+    if (results.length === 0) {
+      return res.status(404).json({ message: "Usuario no encontrado" });
+    }
 
-    res.json({results: {
+    const data = results[0];
+
+    return res.json({
+      results: {
         id_usuario: data.id_usuario,
         nombre_usuario: data.nombre_usuario,
         apellido_usuario: data.apellido_usuario,
         dni: data.dni,
         imagen_usuario: data.imagen_usuario,
-        imagen: data.imagen_usuario,
         contraseña_usuario: data.contraseña_usuario,
         email_usuario: data.email_usuario,
         rol: data.rol,
-        telefono_usuario: data.telefono_usuario
-    }});
-    console.log(data);
-    
+        telefono_usuario: data.telefono_usuario,
+      },
+    });
   });
 };
 
-const createUsuario = async (req, res) => {
+const createUsuario = (req, res) => {
   const {
     nombre_usuario,
     apellido_usuario,
@@ -52,7 +58,7 @@ const createUsuario = async (req, res) => {
   } = req.body;
 
   const consulta =
-    "INSERT INTO USUARIOS (NOMBRE_USUARIO,APELLIDO_USUARIO,CONTRASEÑA_USUARIO,ROL,DNI,EMAIL_USUARIO,TELEFONO_USUARIO) VALUES (?,?,?,?,?,?,?)";
+    "INSERT INTO USUARIOS (NOMBRE_USUARIO, APELLIDO_USUARIO, CONTRASEÑA_USUARIO, ROL, DNI, EMAIL_USUARIO, TELEFONO_USUARIO) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
   conection.query(
     consulta,
@@ -66,13 +72,15 @@ const createUsuario = async (req, res) => {
       telefono_usuario,
     ],
     (err, results) => {
-      if (err) throw err;
-      res.send({ message: "Usuario creado con exito" });
+      if (err) {
+        return res.status(500).json({ message: "Error al crear usuario" });
+      }
+      return res.status(201).json({ message: "Usuario creado con éxito" });
     }
   );
 };
 
-const updateUsuario = async (req, res) => {
+const updateUsuario = (req, res) => {
   const { id } = req.params;
 
   const {
@@ -83,7 +91,7 @@ const updateUsuario = async (req, res) => {
     dni,
     email_usuario,
     telefono_usuario,
-    imagen_usuario
+    imagen_usuario,
   } = req.body;
 
   const consulta =
@@ -103,8 +111,17 @@ const updateUsuario = async (req, res) => {
       id,
     ],
     (err, results) => {
-      if (err) throw err;
-      res.send({ message: "Usuario actualizado con exito" });
+      if (err) {
+        return res.status(500).json({ message: "Error al actualizar usuario" });
+      }
+
+      if (results.affectedRows === 0) {
+        return res
+          .status(404)
+          .json({ message: "Usuario no encontrado para actualizar" });
+      }
+
+      return res.status(200).json({ message: "Usuario actualizado con éxito" });
     }
   );
 };
@@ -116,8 +133,17 @@ const deleteUsuario = (req, res) => {
     "UPDATE USUARIOS SET ESTADO_USUARIO = FALSE WHERE ID_USUARIO = ?";
 
   conection.query(consulta, [id], (err, results) => {
-    if (err) throw err;
-    res.send({ message: "Usuario eliminado con exito" });
+    if (err) {
+      return res.status(500).json({ message: "Error al eliminar usuario" });
+    }
+
+    if (results.affectedRows === 0) {
+      return res
+        .status(404)
+        .json({ message: "Usuario no encontrado para eliminar" });
+    }
+
+    return res.status(200).json({ message: "Usuario eliminado con éxito" });
   });
 };
 

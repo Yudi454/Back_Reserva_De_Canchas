@@ -2,13 +2,19 @@ const bcrypt = require("bcrypt");
 const conection = require("../config/database");
 
 const login = (req, res) => {
+  if (!email || !contraseña) {
+    return res.status(400).json({ message: "Faltan campos obligatorios" });
+  }
+
   const { email, contraseña } = req.body;
 
   const consulta =
     "select * from clientes where email_cliente = ? and contraseña_cliente = ?";
 
   conection.query(consulta, [email, contraseña], async (err, results) => {
-    if (err) throw err;
+    if (err) {
+      return res.status(500).json({ message: "Error en el servidor" });
+    }
 
     if (results.length > 0) {
       //SI ES CLIENTE
@@ -48,6 +54,10 @@ const login = (req, res) => {
 };
 
 const register = async (req, res) => {
+  if (!usuario || !contraseña || !email || !telefono) {
+    return res.status(400).send({ message: "Faltan campos obligatorios" });
+  }
+
   const { usuario, contraseña, email, telefono } = req.body;
 
   const consulta =
