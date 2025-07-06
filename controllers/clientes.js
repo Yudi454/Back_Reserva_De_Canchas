@@ -13,6 +13,9 @@ const getAllClientes = (req, res) => {
 const getCliente = (req, res) => {
   const { id } = req.params;
 
+  console.log(id);
+  
+
   const consulta =
     "SELECT id_cliente, usuario, email_cliente, telefono_cliente FROM clientes WHERE id_cliente = ?";
 
@@ -20,6 +23,9 @@ const getCliente = (req, res) => {
     if (err) throw err;
 
     const data = results[0];
+
+    console.log(data);
+    
 
     res.json({
       results: {
@@ -35,7 +41,7 @@ const getCliente = (req, res) => {
 const deleteClientes = (req, res) => {
   const { id } = req.params;
 
-  const consulta = "DELETE FROM Clientes WHERE id_cliente=?";
+  const consulta = "DELETE FROM Clientes WHERE id_clientes=?";
 
   conection.query(consulta, [id], (err, results) => {
     if (err) throw err;
