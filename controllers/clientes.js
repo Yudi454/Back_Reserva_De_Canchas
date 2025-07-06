@@ -41,7 +41,7 @@ const getCliente = (req, res) => {
 const deleteClientes = (req, res) => {
   const { id } = req.params;
 
-  const consulta = "UPDATE clientes set ESTADO_CLIENTE = flase WHERE id_cliente = ?";
+  const consulta = "DELETE FROM Clientes WHERE id_clientes=?";
 
   conection.query(consulta, [id], (err, results) => {
     if (err) throw err;
