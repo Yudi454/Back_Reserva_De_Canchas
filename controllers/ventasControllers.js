@@ -1,8 +1,6 @@
 const conection = require("../config/database");
 const dayjs = require("dayjs");
 
-const dayjs = require("dayjs");
-
 const getVentas = (req, res) => {
   const consulta =
     "SELECT v.id_venta, u.nombre_usuario, u.apellido_usuario, v.fecha_venta, v.total_venta FROM VENTAS V JOIN USUARIOS U ON V.ID_USUARIO = U.ID_USUARIO WHERE ESTADO_VENTA = TRUE";
@@ -23,8 +21,6 @@ const getVentas = (req, res) => {
     return res.json(ventas);
   });
 };
-
-const dayjs = require("dayjs");
 
 const getVenta = (req, res) => {
   const { id } = req.params;

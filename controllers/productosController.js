@@ -40,6 +40,7 @@ const getProducto = (req, res) => {
         stock: data.stock,
         nombre_proveedor: data.nombre_proveedor,
         imagen: data.imagen_producto,
+        imagen_producto: data.imagen_producto
       },
     });
   });
@@ -65,6 +66,8 @@ const buscarPorNombre = (req, res) => {
 };
 
 const createProducto = (req, res) => {
+  console.log(req.body);
+  
   const {
     nombre_producto,
     imagen_producto,

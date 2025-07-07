@@ -16,7 +16,7 @@ const getProveedor = (req, res) => {
   const { id } = req.params;
 
   const consulta =
-    "SELECT id_proveedor, nombre_proveedor, telefono_proveedor, email_proveedor FROM PROVEEDORES WHERE ID_PROVEEDOR = ? AND ESTADO_PROVEEDOR = TRUE";
+    "SELECT id_proveedor, nombre_proveedor,imagen_proveedor, telefono_proveedor, email_proveedor FROM PROVEEDORES WHERE ID_PROVEEDOR = ? AND ESTADO_PROVEEDOR = TRUE";
 
   conection.query(consulta, [id], (err, results) => {
     if (err) {
@@ -28,6 +28,7 @@ const getProveedor = (req, res) => {
     }
 
     const data = results[0];
+console.log(data);
 
     res.json({
       results: {
@@ -35,6 +36,8 @@ const getProveedor = (req, res) => {
         nombre_proveedor: data.nombre_proveedor,
         telefono_proveedor: data.telefono_proveedor,
         email_proveedor: data.email_proveedor,
+        imagen: data.imagen_proveedor,
+        imagen_proveedor: data.imagen_proveedor
       },
     });
   });
@@ -64,19 +67,21 @@ const buscarProveedorPorNombre = (req, res) => {
       return res.status(404).json({ message: "No se encontraron resultados" });
     }
 
+    console.log(results);
+    
     return res.json(results);
   });
 };
 
 const createProveedor = (req, res) => {
-  const { nombre_proveedor, email_proveedor, telefono_proveedor } = req.body;
+  const { nombre_proveedor,imagen_proveedor, email_proveedor, telefono_proveedor } = req.body;
 
   const consulta =
-    "INSERT INTO PROVEEDORES (NOMBRE_PROVEEDOR, EMAIL_PROVEEDOR, TELEFONO_PROVEEDOR) VALUES (?, ?, ?)";
+    "INSERT INTO PROVEEDORES (NOMBRE_PROVEEDOR,IMAGEN_PROVEEDOR, EMAIL_PROVEEDOR, TELEFONO_PROVEEDOR) VALUES (?, ?, ?)";
 
   conection.query(
     consulta,
-    [nombre_proveedor, email_proveedor, telefono_proveedor],
+    [nombre_proveedor,imagen_proveedor, email_proveedor, telefono_proveedor],
     (err, results) => {
       if (err) {
         return res.status(500).json({ message: "Error al crear proveedor" });
@@ -89,14 +94,14 @@ const createProveedor = (req, res) => {
 
 const updateProveedor = (req, res) => {
   const { id } = req.params;
-  const { nombre_proveedor, email_proveedor, telefono_proveedor } = req.body;
+  const { nombre_proveedor, imagen_proveedor, email_proveedor, telefono_proveedor } = req.body;
 
   const consulta =
-    "UPDATE PROVEEDORES SET NOMBRE_PROVEEDOR = ?, EMAIL_PROVEEDOR = ?, TELEFONO_PROVEEDOR = ? WHERE ID_PROVEEDOR = ?";
+    "UPDATE PROVEEDORES SET NOMBRE_PROVEEDOR = ?, IMAGEN_PROVEEDOR = ?, EMAIL_PROVEEDOR = ?, TELEFONO_PROVEEDOR = ? WHERE ID_PROVEEDOR = ?";
 
   conection.query(
     consulta,
-    [nombre_proveedor, email_proveedor, telefono_proveedor, id],
+    [nombre_proveedor, imagen_proveedor, email_proveedor, telefono_proveedor, id],
     (err, results) => {
       if (err) {
         return res
