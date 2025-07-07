@@ -350,9 +350,13 @@ const deleteReservas = (req, res) => {
 
 const updateReserva = (req, res) => {
   const { id } = req.params;
-  const { dia_reserva, id_cancha, horario_inicio, horario_fin, total_reserva } =
+  const { dia_reserva, id_cancha, horario, total_reserva } =
     req.body;
 
+  console.log(req.params)
+  console.log(req.body)
+
+  const [horario_inicio, horario_fin] = horario.split("-");
   const fecha = dayjs(dia_reserva, "DD-MM-YYYY").format("YYYY-MM-DD");
 
   const buscarIDHorario = `SELECT id_horario FROM horarios WHERE hora_inicio = ? AND hora_fin = ?`;

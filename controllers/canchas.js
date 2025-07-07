@@ -44,11 +44,11 @@ const getOneCancha = (req, res) => {
 };
 
 const createCanchas = (req, res) => {
+  const { imagen_cancha, tipo_cancha, precio_cancha } = req.body;
   if (!imagen_cancha || !tipo_cancha || !precio_cancha) {
     return res.status(400).json({ message: "Faltan campos obligatorios" });
   }
 
-  const { imagen_cancha, tipo_cancha, precio_cancha } = req.body;
 
   const consulta = `insert into canchas (imagen_cancha,tipo_cancha,precio_cancha)
   values(?,?,?)`;
@@ -89,15 +89,18 @@ const DeleteCancha = (req, res) => {
 
 const updateCanchas = (req, res) => {
   const { id } = req.params;
-  const { imagen_cancha, tipo_cancha, precio_cancha } = req.body;
+  console.log(req.params)
+  console.log(req.body)
+  const { imagen, tipo_cancha, precio_cancha } = req.body;
 
   const consulta = `UPDATE canchas SET imagen_cancha=?, precio_cancha=?, tipo_cancha=? WHERE id_cancha=?`;
 
   conection.query(
     consulta,
-    [imagen_cancha, precio_cancha, tipo_cancha, id],
+    [imagen, precio_cancha, tipo_cancha, id],
     (err, results) => {
       if (err) {
+        console.log(err)
         return res
           .status(500)
           .json({ message: "Error al actualizar la cancha" });
