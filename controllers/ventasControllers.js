@@ -62,6 +62,7 @@ const getVenta = (req, res) => {
         subtotal_detalle_venta: r.subtotal_detalle_venta,
         precio_producto: r.precio_producto,
         imagen: r.imagen_producto,
+        imagen_producto: r.imagen_producto,
       })),
     };
 
@@ -79,6 +80,8 @@ const createVenta = (req, res) => {
 
   conection.query(consultaUsuario, [email_usuario], (err, result) => {
     if (err) {
+      console.log(err);
+
       return res.status(500).json({ message: "Error al buscar el usuario" });
     }
 
@@ -233,32 +236,88 @@ const updateVenta = (req, res) => {
           return res.status(500).json({ message: "Error al actualizar venta" });
         }
 
-        const consultaDetalle =
-          "UPDATE DETALLE_VENTAS SET SUBTOTAL_DETALLE_VENTA = ?, CANTIDAD = ? WHERE id_producto = ? AND id_venta = ?";
+        const consultaDetalleUpdate = `
+  UPDATE DETALLE_VENTAS 
+  SET SUBTOTAL_DETALLE_VENTA = ?, CANTIDAD = ? 
+  WHERE id_producto = ? AND id_venta = ?
+`;
+
+        const consultaDetalleInsert = `
+  INSERT INTO DETALLE_VENTAS (id_venta, id_producto, cantidad, subtotal_detalle_venta) 
+  VALUES (?, ?, ?, ?)
+`;
+
+        const consultaExiste = `
+  SELECT * FROM DETALLE_VENTAS 
+  WHERE id_producto = ? AND id_venta = ?
+`;
 
         let contador = 0;
         let errorOcurrido = false;
 
         productos.forEach((p) => {
           const { precio_producto, cantidad, id_producto } = p;
-          const subtotal = precio_producto * cantidad;
+          const subtotal = parseFloat(precio_producto) * parseInt(cantidad);
 
           conection.query(
-            consultaDetalle,
-            [subtotal, cantidad, id_producto, id],
-            (err, result) => {
+            consultaExiste,
+            [id_producto, id],
+            (err, resultados) => {
               if (err) {
                 errorOcurrido = true;
                 return res
                   .status(500)
-                  .json({ message: "Error al actualizar detalle de venta" });
+                  .json({
+                    message: "Error al verificar existencia del detalle",
+                  });
               }
 
-              contador++;
-              if (contador === productos.length && !errorOcurrido) {
-                return res
-                  .status(200)
-                  .json({ message: "Venta actualizada con éxito" });
+              if (resultados.length > 0) {
+                // SI EXISTE SE ACTUALIZA
+                conection.query(
+                  consultaDetalleUpdate,
+                  [subtotal, cantidad, id_producto, id],
+                  (err) => {
+                    if (err) {
+                      errorOcurrido = true;
+                      return res
+                        .status(500)
+                        .json({
+                          message: "Error al actualizar detalle de venta",
+                        });
+                    }
+
+                    contador++;
+                    if (contador === productos.length && !errorOcurrido) {
+                      return res
+                        .status(200)
+                        .json({ message: "Venta actualizada con éxito" });
+                    }
+                  }
+                );
+              } else {
+                // SI NO EXISTE SE CREA
+                conection.query(
+                  consultaDetalleInsert,
+                  [id, id_producto, cantidad, subtotal],
+                  (err) => {
+                    if (err) {
+                      errorOcurrido = true;
+                      return res
+                        .status(500)
+                        .json({
+                          message: "Error al insertar detalle de venta",
+                        });
+                    }
+
+                    contador++;
+                    if (contador === productos.length && !errorOcurrido) {
+                      return res
+                        .status(200)
+                        .json({ message: "Venta actualizada con éxito" });
+                    }
+                  }
+                );
               }
             }
           );

@@ -60,7 +60,8 @@ const buscarPorNombre = (req, res) => {
     if (results.length === 0) {
       return res.status(404).json({ message: "No se encontraron resultados" });
     }
-
+    console.log(results);
+    
     return res.json(results);
   });
 };

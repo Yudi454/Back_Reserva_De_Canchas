@@ -66,6 +66,7 @@ const getOneReserva = (req, res) => {
         telefono_cliente: data.telefono_cliente,
         total_reserva: data.total,
         dia_reserva: dayjs(data.dia_reserva).format("DD-MM-YYYY"),
+        fecha_reserva: dayjs(data.dia_reserva).format("DD-MM-YYYY"),
         horario: `${data.hora_inicio}-${data.hora_fin}`,
         id_cancha: data.id_cancha,
         tipo_cancha: data.tipo_cancha,
@@ -350,11 +351,9 @@ const deleteReservas = (req, res) => {
 
 const updateReserva = (req, res) => {
   const { id } = req.params;
-  const { dia_reserva, id_cancha, horario, total_reserva } =
-    req.body;
+  const { dia_reserva, id_cancha, horario, total_reserva } = req.body;
 
-  console.log(req.params)
-  console.log(req.body)
+  console.log(req.body);
 
   const [horario_inicio, horario_fin] = horario.split("-");
   const fecha = dayjs(dia_reserva, "DD-MM-YYYY").format("YYYY-MM-DD");
@@ -365,6 +364,7 @@ const updateReserva = (req, res) => {
     buscarIDHorario,
     [horario_inicio, horario_fin],
     (err, results) => {
+      console.log(results);
       if (err) {
         return res.status(500).json({ message: "Error al buscar horario" });
       }
