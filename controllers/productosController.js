@@ -122,6 +122,8 @@ const updateProducto = (req, res) => {
     stock,
     nombre_proveedor,
   } = req.body;
+  console.log(req.body)
+  console.log(req.params)
 
   const consultaProveedor =
     "SELECT id_proveedor FROM PROVEEDORES WHERE nombre_proveedor = ?";

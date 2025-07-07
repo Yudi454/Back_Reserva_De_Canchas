@@ -75,15 +75,17 @@ const buscarProveedorPorNombre = (req, res) => {
 
 const createProveedor = (req, res) => {
   const { nombre_proveedor,imagen_proveedor, email_proveedor, telefono_proveedor } = req.body;
+  console.log(req.body)
 
   const consulta =
-    "INSERT INTO PROVEEDORES (NOMBRE_PROVEEDOR,IMAGEN_PROVEEDOR, EMAIL_PROVEEDOR, TELEFONO_PROVEEDOR) VALUES (?, ?, ?)";
+    "INSERT INTO PROVEEDORES (imagen_proveedor,nombre_proveedor, email_proveedor, telefono_proveedor) VALUES (?, ?, ?,?)";
 
   conection.query(
     consulta,
-    [nombre_proveedor,imagen_proveedor, email_proveedor, telefono_proveedor],
+    [imagen_proveedor,nombre_proveedor, email_proveedor, telefono_proveedor],
     (err, results) => {
       if (err) {
+        console.log(err)
         return res.status(500).json({ message: "Error al crear proveedor" });
       }
 
