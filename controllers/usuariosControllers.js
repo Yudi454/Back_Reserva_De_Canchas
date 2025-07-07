@@ -48,6 +48,7 @@ const getUsuario = (req, res) => {
 
 const createUsuario = (req, res) => {
   const {
+    imagen_usuario,
     nombre_usuario,
     apellido_usuario,
     contraseña_usuario,
@@ -56,9 +57,10 @@ const createUsuario = (req, res) => {
     email_usuario,
     telefono_usuario,
   } = req.body;
+  console.log(req.body)
 
   const consulta =
-    "INSERT INTO USUARIOS (NOMBRE_USUARIO, APELLIDO_USUARIO, CONTRASEÑA_USUARIO, ROL, DNI, EMAIL_USUARIO, TELEFONO_USUARIO) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    "INSERT INTO USUARIOS (NOMBRE_USUARIO, APELLIDO_USUARIO, CONTRASEÑA_USUARIO, ROL, DNI, EMAIL_USUARIO, TELEFONO_USUARIO,IMAGEN_USUARIO) VALUES (?, ?, ?, ?, ?, ?, ?,?)";
 
   conection.query(
     consulta,
@@ -70,6 +72,7 @@ const createUsuario = (req, res) => {
       dni,
       email_usuario,
       telefono_usuario,
+      imagen_usuario,
     ],
     (err, results) => {
       if (err) {

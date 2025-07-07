@@ -2,7 +2,7 @@ const conection = require("../config/database");
 
 const getAllClientes = (req, res) => {
   const consulta =
-    "SELECT id_cliente, usuario, email_cliente, telefono_cliente FROM clientes";
+    "SELECT id_cliente, usuario, email_cliente, telefono_cliente FROM clientes where estado_cliente=1";
 
   conection.query(consulta, (err, results) => {
     if (err) {
@@ -97,6 +97,7 @@ const updateClientes = (req, res) => {
 const createCliente = (req, res) => {
   const { usuario, contraseña_cliente, email_cliente, telefono_cliente } =
     req.body;
+
 
   const consulta =
     "INSERT INTO Clientes (usuario, contraseña_cliente, email_cliente, telefono_cliente) VALUES (?,?,?,?)";

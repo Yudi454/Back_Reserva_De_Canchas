@@ -145,6 +145,7 @@ const createVenta = (req, res) => {
 
 const cargarVentas = (req, res) => {
   const { id } = req.params;
+
   const productos = req.body;
 
   let total_venta = 0;
